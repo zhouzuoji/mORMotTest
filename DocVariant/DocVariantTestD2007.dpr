@@ -1,7 +1,6 @@
-program DocVariantTest;
+program DocVariantTestD2007;
 
 {$APPTYPE CONSOLE}
-{$I SynDprUses.inc}
 {$I Synopse.inc}
 
 uses
@@ -12,7 +11,8 @@ uses
   Variants,
   VarUtils,
   SynCommons,
-  uDocVariantTest in 'uDocVariantTest.pas';
+  uDocVariantTest in 'uDocVariantTest.pas',
+  uWindowsOnly in 'uWindowsOnly.pas';
 
 begin
   System.ReportMemoryLeaksOnShutdown := True;

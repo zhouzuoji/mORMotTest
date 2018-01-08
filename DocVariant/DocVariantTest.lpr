@@ -25,13 +25,10 @@ type
 { TMyApplication }
 
 procedure TMyApplication.DoRun;
-var
-  ErrorMsg: String;
 begin
   test;
-  { add your program here }
-
-  // stop program loop
+  Writeln('press <ENTER> to exit...');
+  Readln;
   Terminate;
 end;
 

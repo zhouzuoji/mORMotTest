@@ -15,82 +15,6 @@ procedure test;
 
 implementation
 
-type
-  TDispInvokeFunc = procedure(Dest: PVarData; const Source: TVarData; CallDesc: PCallDesc; Params: Pointer); cdecl;
-  TCustomVariantTypeFake = class(TCustomVariantType)
-
-  end;
-
-var
-  _DispInvoke_rtl: TDispInvokeFunc;
-
-function VariantsDispInvokeAddress: TDispInvokeFunc;
-asm
-  {$ifdef CPU64}
-  mov rax,offset Variants.@DispInvoke
-  {$else}
-  mov eax,offset Variants.@DispInvoke
-  {$endif}
-end;
-
-procedure _MyDispInvoke(Dest: PVarData; const Source: TVarData;
-  CallDesc: PCallDesc; Params: Pointer); cdecl;
-var
-  pSource: PVarData;
-  LHandler: TCustomVariantType;
-  LDest: TVarData;
-  LDestPtr: PVarData;
-begin
-  pSource := @Source;
-  while pSource.VType = varByRef or varVariant do
-    pSource := PVarData(pSource.VPointer);
-
-  // figure out destination temp
-  if Dest = nil then
-    LDestPtr := nil
-  else
-  begin
-    VariantInit(LDest);
-    LDestPtr := @LDest;
-  end;
-
-  // attempt it
-  try
-
-    // we only do this if it is one of those special types
-    case pSource^.VType of
-      varDispatch,
-      varDispatch + varByRef,
-      varUnknown,
-      varUnknown + varByRef,
-      varAny:
-        if Assigned(VarDispProc) then
-          VarDispProc(PVariant(LDestPtr), Variant(pSource^), CallDesc, @Params);
-    else
-      // finally check to see if it is one of those custom types
-      if FindCustomVariantType(pSource^.VType, LHandler) then
-        TCustomVariantTypeFake(LHandler).DispInvoke(LDestPtr, pSource^, CallDesc, @Params)
-      else
-        VarInvalidOp;
-    end;
-  finally
-
-    // finish up with destination temp
-    if LDestPtr <> nil then
-    begin
-      VarClear(Variant(Dest^));
-      Dest^ := LDestPtr^;
-      ZeroFill(LDestPtr);
-    end;
-  end;
-end;
-
-procedure patchRTL;
-begin
-  _DispInvoke_rtl := VariantsDispInvokeAddress();
-  RedirectCode(@_DispInvoke_rtl, @_MyDispInvoke);
-end;
-
 function checkDocVariantData(const v: Variant; kind: TDocVariantKind; valueCount: Integer = -1): Boolean;
 var
   pData: PVarData;
@@ -141,44 +65,6 @@ begin
   test1;
 end;
 
-///
-///Add subscript support to TDocVariant
-///Add OLE array support for TTextWriter.AddVariant
-///
-
-procedure callDispMethodOfVariantReference(const v: Variant);
-begin
-end;
-
-procedure printIntArray(const a: array of Integer);
-var
-  i: Integer;
-begin
-  for i := Low(a) to High(a) do
-    Write(a[i], ' ');
-  Writeln;
-end;
-
-procedure testDynArray;
-var
-  a1, a2: array of Integer;
-begin
-  SetLength(a1, 2);
-  a1[0] := 1;
-  a1[1] := 2;
-  a2 := a1;
-  printIntArray(a1);
-  printIntArray(a2);
-  a2[0] := 20;
-  a1[1] := 11;
-  printIntArray(a1);
-  printIntArray(a2);
-  SetLength(a2, 3);
-  a2[2] := 987;
-  printIntArray(a1);
-  printIntArray(a2);
-end;
-
 procedure test1;
 var
   doc: Variant;
@@ -217,8 +103,5 @@ begin
   doc.students[2].address.city := doc.students[2].address['city'] + ' City';
   printVariant('doc.students[2]', doc.students[2]);
 end;
-
-initialization
-  patchRTL;
 
 end.
