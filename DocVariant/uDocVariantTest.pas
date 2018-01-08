@@ -4,11 +4,9 @@ interface
 
 uses
   SysUtils,
-  Windows,
   Classes,
   Variants,
   VarUtils,
-  ComObj,
   SynCommons;
 
 procedure test;
