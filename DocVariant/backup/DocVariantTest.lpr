@@ -100,7 +100,7 @@ end;
   begin
     try
       Writeln(FollowRedircts('http://www.163.com/'));
-      //Writeln(GetExternalIPAddress);
+      Writeln(GetExternalIPAddress);
       ConsoleMain;
     except
       on E: Exception do

@@ -6,18 +6,16 @@ program DocVariantTestD2007;
 uses
   {$I SynDprUses.inc}
   SysUtils,
-  Windows,
-  Classes,
-  Variants,
-  VarUtils,
   SynCommons,
-  uDocVariantTest in 'uDocVariantTest.pas',
-  uWindowsOnly in 'uWindowsOnly.pas';
+  ParseNumberTest,
+  main,
+  uDocVariantTest in 'uDocVariantTest.pas';
 
 begin
   System.ReportMemoryLeaksOnShutdown := True;
   try
-    test;
+    test1;
+    NumberParsingBenchmark;
   except
     on E:Exception do
       Writeln(E.Classname, ': ', E.Message);

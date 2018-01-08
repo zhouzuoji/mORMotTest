@@ -7,17 +7,11 @@ program DocVariantTestD7;
 uses
   {$I SynDprUses.inc}
   SysUtils,
-  Windows,
-  Classes,
-  Variants,
-  VarUtils,
-  SynCommons,
-  uDocVariantTest in 'uDocVariantTest.pas',
-  uWindowsOnly in 'uWindowsOnly.pas';
+  main;
 
 begin
   try
-    test;
+    ConsoleMain;
   except
     on E:Exception do
       Writeln(E.Classname, ': ', E.Message);
