@@ -12,6 +12,7 @@ uses
   Classes,
   SynCommons,
   HPPas,
+  HppStrs,
   HppTypeCast,
   HppSysUtils,
   HppVariants,
@@ -35,7 +36,7 @@ end;
 procedure FunctionTest_HppJSONParser;
 var
   s: string;
-  ss: array [0..1] of TSmartString;
+  ss: THppArray<TStringView>;
   s1, s2: string;
   V: Variant;
   fileContent: UTF8String;
@@ -50,11 +51,11 @@ begin
       Readln(s);
       s := SysUtils.Trim(s);
       if s = '' then  Continue;
-
-      case HppSysUtils.split(s, [], @ss[0], 2) of
+      ss := HppStrs.split(s, [], [], 2);
+      case ss.length of
         0: Continue;
-        1: begin s1 := ss[0].ToUTF16String; s2 := ''; end;
-      else begin s1 := ss[0].ToUTF16String; s2 := ss[1].ToUTF16String; end;
+        1: begin s1 := ss.items(0).ToUTF16String; s2 := ''; end;
+      else begin s1 := ss.items(0).ToUTF16String; s2 := ss.items(1).ToUTF16String; end;
       end;
       s1 := SysUtils.Trim(s1);
       s2 := SysUtils.Trim(s2);

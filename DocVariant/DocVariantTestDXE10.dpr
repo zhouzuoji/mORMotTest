@@ -6,7 +6,8 @@ program DocVariantTestDXE10;
 
 uses
   SysUtils,
-  main in 'main.pas';
+  main in 'main.pas',
+  HppStrs in '..\..\HPPas\HppStrs.pas';
 
 begin
   System.ReportMemoryLeaksOnShutdown := True;

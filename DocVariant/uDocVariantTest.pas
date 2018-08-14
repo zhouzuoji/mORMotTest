@@ -1,4 +1,4 @@
-unit uDocVariantTest;
+﻿unit uDocVariantTest;
 {$I Synopse.inc}
 {$I HPPas.inc}
 interface
@@ -14,6 +14,7 @@ uses
   Variants,
   SynCommons,
   HPPas,
+  HppStrs,
   HppTypeCast,
   HppSysUtils,
   HppJSONParser,
@@ -366,7 +367,7 @@ end;
 procedure TestSmartString;
 var
   u8s: UTF8String;
-  ss: TSmartString;
+  ss: TStringView;
 {$ifdef MSWINDOWS}  
   oldcp: Integer;
   numbytes: Cardinal;
